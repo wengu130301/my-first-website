@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apple Demo</title>
+    <title>WEN 的计算器</title>
     <!-- PWA 核心配置 -->
     <link rel="manifest" href="manifest.json">
     <!-- 为 Apple 设备优化 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#4a6fa8">
     <style>
         /* 基础样式 */
+        * {
+            box-sizing: border-box;
+        }
         body {
             font-family: -apple-system, system-ui, sans-serif;
             display: flex;
@@ -22,56 +25,193 @@
             margin: 0;
             background-color: #f5f5f7;
             color: #333;
-            text-align: center;
             padding: 20px;
-            box-sizing: border-box;
         }
-        /* 【核心修改】个人文字徽标样式 */
+        /* 个人文字徽标样式 */
         .logo {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #4a6fa8 0%, #2e4c7a 100%); /* 深蓝渐变背景 */
-            border-radius: 50%; /* 圆形 */
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4a6fa8 0%, #2e4c7a 100%);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 30px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            margin-bottom: 15px;
             color: white;
-            font-size: 40px; /* 文字大小 */
-            font-weight: 600; /* 字体加粗 */
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            letter-spacing: 1px; /* 轻微字间距 */
-        }
-        h1 {
-            margin: 0 0 15px 0;
-            font-size: 2.2em;
+            font-size: 28px;
             font-weight: 600;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: 1px;
         }
-        p {
+        .app-title {
+            margin: 0 0 5px 0;
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #2e4c7a;
+        }
+        .app-subtitle {
             color: #666;
-            line-height: 1.5;
+            margin-bottom: 25px;
+            text-align: center;
+            max-width: 300px;
+            line-height: 1.4;
+        }
+        /* 计算器样式 */
+        .calculator {
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+            width: 100%;
             max-width: 320px;
-            margin: 0;
+        }
+        .display-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: right;
+            border: 2px solid #e9ecef;
+        }
+        .calculation {
+            font-size: 14px;
+            color: #868e96;
+            height: 20px;
+            margin-bottom: 5px;
+            overflow: hidden;
+        }
+        #display {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 32px;
+            text-align: right;
+            color: #212529;
+            outline: none;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        button {
+            height: 60px;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* 数字按钮样式 */
+        .btn-number {
+            background-color: #f1f3f4;
+            color: #202124;
+        }
+        .btn-number:active {
+            background-color: #e0e0e0;
+            transform: scale(0.97);
+        }
+        /* 运算符按钮样式 */
+        .btn-operator {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+        .btn-operator:active {
+            background-color: #bfdbfe;
+            transform: scale(0.97);
+        }
+        /* 功能按钮样式 (C, ⌫) */
+        .btn-function {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+        .btn-function:active {
+            background-color: #fde68a;
+            transform: scale(0.97);
+        }
+        /* 等号按钮样式 */
+        .btn-equals {
+            background: linear-gradient(135deg, #4a6fa8 0%, #2e4c7a 100%);
+            color: white;
+            grid-row: span 2;
+        }
+        .btn-equals:active {
+            transform: scale(0.97);
+        }
+        /* 零按钮样式 */
+        #btn-zero {
+            grid-column: span 2;
+        }
+        .footer-note {
+            color: #adb5bd;
+            font-size: 12px;
+            margin-top: 25px;
+            text-align: center;
+            max-width: 300px;
         }
     </style>
 </head>
 <body>
-    <!-- 【核心修改】这里显示你的名字“WEN” -->
+    <!-- 个人徽标 -->
     <div class="logo">WEN</div>
-    <h1>wengu Demo</h1>
-    <p>这是一个渐进式 Web 应用 (PWA) 示例。你可以将它添加到主屏幕，离线时也能访问。</p>
-    <p>此网站由汩星人开发</p>
-
+    <h1 class="app-title">简易计算器</h1>
+    <p class="app-subtitle">一个可以安装到桌面的渐进式网页应用</p>
+    
+    <!-- 计算器界面 -->
+    <div class="calculator">
+        <div class="display-container">
+            <div class="calculation" id="calculation"></div>
+            <input type="text" class="display" id="display" readonly value="0">
+        </div>
+        <div class="buttons">
+            <!-- 第一行 -->
+            <button class="btn-function" onclick="clearDisplay()">C</button>
+            <button class="btn-function" onclick="deleteLast()">⌫</button>
+            <button class="btn-operator" onclick="appendToDisplay('/')">÷</button>
+            <button class="btn-operator" onclick="appendToDisplay('*')">×</button>
+            
+            <!-- 第二行 -->
+            <button class="btn-number" onclick="appendToDisplay('7')">7</button>
+            <button class="btn-number" onclick="appendToDisplay('8')">8</button>
+            <button class="btn-number" onclick="appendToDisplay('9')">9</button>
+            <button class="btn-operator" onclick="appendToDisplay('-')">−</button>
+            
+            <!-- 第三行 -->
+            <button class="btn-number" onclick="appendToDisplay('4')">4</button>
+            <button class="btn-number" onclick="appendToDisplay('5')">5</button>
+            <button class="btn-number" onclick="appendToDisplay('6')">6</button>
+            <button class="btn-operator" onclick="appendToDisplay('+')" style="font-size: 24px;">+</button>
+            
+            <!-- 第四行 -->
+            <button class="btn-number" onclick="appendToDisplay('1')">1</button>
+            <button class="btn-number" onclick="appendToDisplay('2')">2</button>
+            <button class="btn-number" onclick="appendToDisplay('3')">3</button>
+            <button class="btn-equals" onclick="calculate()" style="font-size: 28px;">=</button>
+            
+            <!-- 第五行 -->
+            <button class="btn-number" id="btn-zero" onclick="appendToDisplay('0')">0</button>
+            <button class="btn-number" onclick="appendToDisplay('.')">.</button>
+        </div>
+    </div>
+    
+    <p class="footer-note">使用 Safari 或 Chrome 的“添加到主屏幕”功能来安装此应用。</p>
+    
+    <!-- 引入计算器逻辑 -->
+    <script src="calculator.js"></script>
+    
     <!-- PWA 服务注册 -->
     <script>
-        // 注册 Service Worker，这是 PWA 的核心
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                // 注册 sw.js 文件
                 navigator.serviceWorker.register('sw.js')
                     .then(function(registration) {
-                        console.log('✅ Service Worker 注册成功，作用域: ', registration.scope);
+                        console.log('✅ Service Worker 注册成功');
                     })
                     .catch(function(err) {
                         console.log('❌ Service Worker 注册失败: ', err);

@@ -1,3 +1,4 @@
+// sw.js - Service Worker 基础缓存
 const CACHE_NAME = 'calculator-v1';
 const urlsToCache = [
   './',

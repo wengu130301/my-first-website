@@ -3,67 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEN 的计算器</title>
+    <title>WEN 的工具箱</title>
+    
+    <!-- PWA 核心配置 -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#4a6fa8">
+    
     <style>
+        /* 基础样式 */
         * { box-sizing: border-box; }
         body {
             font-family: -apple-system, system-ui, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
             margin: 0;
+            padding: 20px;
             background-color: #f5f5f7;
             color: #333;
-            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 页头 */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
         }
         .logo {
             width: 80px;
             height: 80px;
             background: linear-gradient(135deg, #4a6fa8 0%, #2e4c7a 100%);
             border-radius: 50%;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
             color: white;
             font-size: 28px;
             font-weight: 600;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            letter-spacing: 1px;
+            margin-bottom: 10px;
         }
-        .app-title { margin: 0 0 5px 0; font-size: 1.8em; font-weight: 600; color: #2e4c7a; }
-        .app-subtitle { color: #666; margin-bottom: 25px; text-align: center; max-width: 300px; line-height: 1.4; }
-        .calculator {
-            background-color: #fff;
-            border-radius: 16px;
+        .app-title {
+            margin: 0;
+            color: #2e4c7a;
+            font-size: 2em;
+        }
+        .app-subtitle {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* 主内容区 - 两列布局 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        /* 计算器样式 */
+        .calculator-card {
+            background: white;
+            border-radius: 20px;
             padding: 25px;
             box-shadow: 0 10px 35px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 320px;
+        }
+        .calculator-card h2 {
+            margin-top: 0;
+            color: #2e4c7a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .display-container {
             background: #f8f9fa;
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 20px;
-            text-align: right;
             border: 2px solid #e9ecef;
         }
-        .calculation { font-size: 14px; color: #868e96; height: 20px; margin-bottom: 5px; overflow: hidden; }
-        #display {
-            width: 100%; border: none; background: transparent; font-size: 32px; text-align: right;
-            color: #212529; outline: none; font-weight: 500; letter-spacing: 1px;
+        .calculation {
+            font-size: 14px;
+            color: #868e96;
+            height: 20px;
+            margin-bottom: 5px;
+            overflow: hidden;
         }
-        .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-        button {
-            height: 60px; border: none; border-radius: 12px; font-size: 20px; font-weight: 500;
-            cursor: pointer; transition: all 0.1s ease; display: flex; align-items: center; justify-content: center;
+        #display {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 32px;
+            text-align: right;
+            color: #212529;
+            outline: none;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .calc-btn {
+            height: 60px;
+            border: none;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-number { background-color: #f1f3f4; color: #202124; }
         .btn-number:active { background-color: #e0e0e0; transform: scale(0.97); }
@@ -74,43 +129,156 @@
         .btn-equals { background: linear-gradient(135deg, #4a6fa8 0%, #2e4c7a 100%); color: white; grid-row: span 2; }
         .btn-equals:active { transform: scale(0.97); }
         #btn-zero { grid-column: span 2; }
-        .footer-note { color: #adb5bd; font-size: 12px; margin-top: 25px; text-align: center; max-width: 300px; }
+        
+        /* 天气应用样式 */
+        .weather-card {
+            background: linear-gradient(135deg, #89c2f8 0%, #4a8fe7 100%);
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+        }
+        .weather-card h2 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .weather-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        #cityInput {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+        }
+        .weather-input button {
+            padding: 12px 20px;
+            background-color: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 12px;
+            color: #2e4c7a;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .weather-info {
+            background-color: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 180px;
+            text-align: center;
+        }
+        .weather-footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .weather-footer button {
+            padding: 10px 20px;
+            background-color: transparent;
+            border: 2px solid rgba(255,255,255,0.7);
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .data-source {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+        
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #adb5bd;
+            font-size: 14px;
+        }
+        .pwa-tip {
+            margin-top: 10px;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
-    <div class="logo">WEN</div>
-    <h1 class="app-title">简易计算器</h1>
-    <p class="app-subtitle">一个可以安装到桌面的渐进式网页应用</p>
-    <div class="calculator">
-        <div class="display-container">
-            <div class="calculation" id="calculation"></div>
-            <input type="text" class="display" id="display" readonly value="0">
-        </div>
-        <div class="buttons">
-            <button class="btn-function" onclick="clearDisplay()">C</button>
-            <button class="btn-function" onclick="deleteLast()">⌫</button>
-            <button class="btn-operator" onclick="appendToDisplay('/')">÷</button>
-            <button class="btn-operator" onclick="appendToDisplay('*')">×</button>
-            <button class="btn-number" onclick="appendToDisplay('7')">7</button>
-            <button class="btn-number" onclick="appendToDisplay('8')">8</button>
-            <button class="btn-number" onclick="appendToDisplay('9')">9</button>
-            <button class="btn-operator" onclick="appendToDisplay('-')">−</button>
-            <button class="btn-number" onclick="appendToDisplay('4')">4</button>
-            <button class="btn-number" onclick="appendToDisplay('5')">5</button>
-            <button class="btn-number" onclick="appendToDisplay('6')">6</button>
-            <button class="btn-operator" onclick="appendToDisplay('+')" style="font-size: 24px;">+</button>
-            <button class="btn-number" onclick="appendToDisplay('1')">1</button>
-            <button class="btn-number" onclick="appendToDisplay('2')">2</button>
-            <button class="btn-number" onclick="appendToDisplay('3')">3</button>
-            <button class="btn-equals" onclick="calculate()" style="font-size: 28px;">=</button>
-            <button class="btn-number" id="btn-zero" onclick="appendToDisplay('0')">0</button>
-            <button class="btn-number" onclick="appendToDisplay('.')">.</button>
-        </div>
-    </div>
-    <p class="footer-note">使用 Safari 或 Chrome 的“添加到主屏幕”功能来安装此应用。</p>
-    <!-- 【关键】引入 calculator.js 文件 -->
+    <!-- 页头 -->
+    <header class="header">
+        <div class="logo">WEN</div>
+        <h1 class="app-title">工具箱</h1>
+        <p class="app-subtitle">计算器 + 天气预报 PWA应用</p>
+    </header>
+    
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 左侧：计算器 -->
+        <section class="calculator-card">
+            <h2>🧮 计算器</h2>
+            <div class="display-container">
+                <div class="calculation" id="calculation"></div>
+                <input type="text" id="display" readonly value="0">
+            </div>
+            <div class="buttons">
+                <button class="calc-btn btn-function" onclick="clearDisplay()">C</button>
+                <button class="calc-btn btn-function" onclick="deleteLast()">⌫</button>
+                <button class="calc-btn btn-operator" onclick="appendToDisplay('/')">÷</button>
+                <button class="calc-btn btn-operator" onclick="appendToDisplay('*')">×</button>
+                
+                <button class="calc-btn btn-number" onclick="appendToDisplay('7')">7</button>
+                <button class="calc-btn btn-number" onclick="appendToDisplay('8')">8</button>
+                <button class="calc-btn btn-number" onclick="appendToDisplay('9')">9</button>
+                <button class="calc-btn btn-operator" onclick="appendToDisplay('-')">−</button>
+                
+                <button class="calc-btn btn-number" onclick="appendToDisplay('4')">4</button>
+                <button class="calc-btn btn-number" onclick="appendToDisplay('5')">5</button>
+                <button class="calc-btn btn-number" onclick="appendToDisplay('6')">6</button>
+                <button class="calc-btn btn-operator" onclick="appendToDisplay('+')">+</button>
+                
+                <button class="calc-btn btn-number" onclick="appendToDisplay('1')">1</button>
+                <button class="calc-btn btn-number" onclick="appendToDisplay('2')">2</button>
+                <button class="calc-btn btn-number" onclick="appendToDisplay('3')">3</button>
+                <button class="calc-btn btn-equals" onclick="calculate()">=</button>
+                
+                <button class="calc-btn btn-number" id="btn-zero" onclick="appendToDisplay('0')">0</button>
+                <button class="calc-btn btn-number" onclick="appendToDisplay('.')">.</button>
+            </div>
+        </section>
+        
+        <!-- 右侧：天气 -->
+        <section class="weather-card">
+            <h2>🌤️ 实时天气</h2>
+            <div class="weather-input">
+                <input type="text" id="cityInput" placeholder="输入城市名，例如：Beijing">
+                <button onclick="getWeather()">查询</button>
+            </div>
+            <div class="weather-info" id="weatherInfo">
+                <p>输入城市名并点击查询。</p>
+            </div>
+            <div class="weather-footer">
+                <button onclick="getLocationWeather()">📍 使用我的位置</button>
+                <p class="data-source">数据由 OpenWeatherMap 提供</p>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>一个渐进式网页应用 (PWA) • 可以添加到主屏幕使用</p>
+        <p class="pwa-tip">提示：在 Safari 或 Chrome 中使用"添加到主屏幕"功能来安装此应用</p>
+    </footer>
+    
+    <!-- 引入JavaScript文件 -->
     <script src="calculator.js"></script>
+    <script src="weather.js"></script>
+    
+    <!-- PWA Service Worker 注册 -->
     <script>
+        // 注册 Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('sw.js')
